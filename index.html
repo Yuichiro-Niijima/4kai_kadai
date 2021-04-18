@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <video src="movie.mp4" autoplay loop muted></video>
+    <div id="info">
+        
+        <table>
+            <tr class="name">
+                <td>氏名</td>
+                <td><input type="text" id="name"></td>
+            </tr>
+            <tr class=" birthday">
+                <td>生年月日</td>
+                    <td><select id="year"></select></td>
+                    <td><select id="month"></select></td>
+                    <td><select id="day"></select></td>
+            </tr>
+            <tr class="sym">
+                <td>症状</td>
+                <td><input type="text" id="sym"></td>
+            </tr>
+            <tr class="detail">
+                <td>詳細</td>
+                <div class="for_column">
+                    <td><textarea name="" id="detail" cols="30" rows="10"></textarea></td>
+                </div>
+            </tr>
+            <tr class="save_clear">
+                <td></td>
+                <td>
+                    <div class="buttonbox" >
+                            <button id="save">Save</button>
+                            <button id="clear">Clear</button>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+
+    </div>
+    <div id="body_image">
+        <p>body</p>
+        <img src="https://www.quia.com/files/quia/users/ewbio/humanbody-animation.gif" alt="">
+    </div>
+    
+    <script>
+
+
+        // 誕生日
+        function selectBox(start, end) {
+            let str = "";
+
+            for (let i = start; i < end ; i++) {
+                str += `<option>${i}</option>`;
+            }
+            return str;
+        }
+        const yearBox = selectBox(1900, 2020);
+        const monthBox = selectBox(1, 13);
+        const dayBox = selectBox(1, 32);
+
+        $("#year").html(yearBox);
+        $("#month").html(monthBox);
+        $("#day").html(dayBox);
+
+        //1.Save クリックイベント
+        $(function (){
+        $("#save").on("click", function(){
+            let name = $("#name").val();
+            let year = $("#year").val();
+            let month = $("#month").val();
+            let day = $("#day").val();
+            let sym = $("#sym").val();
+            let detail = $("#detail").val();
+
+            let info = {
+                "name" : name,
+                "yaer" : year,
+                "month" : month,
+                "day" : day,
+                "sym" : sym,
+                "detail" : detail
+            }
+
+            let json = JSON.stringify(info);
+            localStorage.setItem("patient",json);
+        });
+
+        //2.clear クリックイベント
+        $("#clear").on("click", function(){
+            localStorage.removeItem("patient");
+            $("#name").val("");
+            $("#year").val("");
+            $("#month").val("");
+            $("#day").val("");
+            $("#sym").val("");
+            $("#detail").val("");
+        });
+
+        //3.ページ読み込み：保存データ取得表示
+        if(localStorage.getItem("patient")){
+            let json_get = localStorage.getItem("patient");
+            let patient_get =JSON.parse(json_get);
+            $("#name").val(patient_get.name);
+            $("#year").val(patient_get.year);
+            $("#month").val(patient_get.month);
+            $("#day").val(patient_get.day);
+            $("#sym").val(patient_get.sym);
+            $("#detail").val(patient_get.detail);
+
+        }
+
+    });
+
+
+
+    </script>
+</body>
+</html>
